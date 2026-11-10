@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo Template Website Travel</title>
+<meta name="description" content="Paket wisata lengkap, harga transparan, pemandu berpengalaman. Pesan mudah lewat WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+  /* ====== GANTI WARNA DI SINI ====== */
+  :root{
+    --utama:#0b6bcb; --utama2:#14b8c4; --aksen:#ff7a1a;
+    --bg:#ffffff; --bg2:#f3f7fb; --kartu:#ffffff; --teks:#14202e; --redup:#5d6c7c; --garis:#e3eaf2;
+    --bayang:0 10px 30px rgba(16,40,70,.10);
+    --radius:20px;
+  }
+  [data-theme="dark"]{
+    --bg:#0c1520; --bg2:#101c2b; --kartu:#142234; --teks:#eaf1f8; --redup:#9db0c3; --garis:#223349;
+    --bayang:0 10px 30px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:80px}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--teks);line-height:1.65;transition:background .3s,color .3s}
+  a{text-decoration:none;color:inherit}
+  button,input,select,textarea{font:inherit;color:inherit}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+  section{padding:84px 0}
+  .alt{background:var(--bg2)}
+  .label{display:inline-block;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--aksen);margin-bottom:8px}
+  h2{font-size:clamp(1.6rem,3.5vw,2.3rem);line-height:1.2;font-weight:800}
+  .head{text-align:center;max-width:620px;margin:0 auto 44px}
+  .head p{color:var(--redup);margin-top:10px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:999px;font-weight:700;border:0;cursor:pointer;
+       background:linear-gradient(135deg,var(--aksen),#ff9a3d);color:#fff;box-shadow:0 8px 20px rgba(255,122,26,.35);transition:transform .2s,box-shadow .2s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(255,122,26,.45)}
+  .btn.garis{background:transparent;box-shadow:none;border:2px solid rgba(255,255,255,.7);color:#fff}
+  .btn.kecil{padding:9px 18px;font-size:.9rem}
+  .btn.sekunder{background:var(--bg2);color:var(--teks);box-shadow:none;border:1px solid var(--garis)}
+
+  /* Progress & navbar */
+  #progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--utama2),var(--aksen));z-index:100}
+  header{position:sticky;top:0;z-index:90;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom:1px solid var(--garis)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .logo{font-weight:800;font-size:1.3rem}
+  .logo b{background:linear-gradient(135deg,var(--utama),var(--utama2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .menu{display:flex;gap:26px;list-style:none;font-weight:600;font-size:.95rem}
+  .menu a{color:var(--redup);transition:color .2s}
+  .menu a:hover,.menu a.aktif{color:var(--utama)}
+  .kanan{display:flex;gap:10px;align-items:center}
+  .ikonbtn{width:42px;height:42px;border-radius:50%;border:1px solid var(--garis);background:var(--kartu);cursor:pointer;font-size:1.1rem}
+  #burger{display:none}
+
+  /* Hero */
+  .hero{position:relative;color:#fff;overflow:hidden;padding:120px 0 150px;
+        background:radial-gradient(circle at 20% 20%,rgba(20,184,196,.55),transparent 45%),
+                   radial-gradient(circle at 85% 30%,rgba(255,122,26,.35),transparent 40%),
+                   linear-gradient(135deg,#06306a,#0b6bcb)}
+  .hero::after{content:"";position:absolute;inset:auto 0 -1px 0;height:90px;background:var(--bg);clip-path:ellipse(70% 100% at 50% 100%)}
+  .hero .wrap{position:relative;z-index:2;text-align:center}
+  .hero h1{font-size:clamp(2.2rem,6vw,4rem);line-height:1.1;font-weight:800;margin-bottom:18px}
+  .hero h1 em{font-style:normal;color:#ffc27a}
+  .hero p{max-width:600px;margin:0 auto 30px;opacity:.92;font-size:1.08rem}
+  .hero .aksi{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .blob{position:absolute;border-radius:50%;filter:blur(2px);opacity:.18;background:#fff;animation:melayang 9s ease-in-out infinite}
+  .b1{width:180px;height:180px;left:6%;top:18%}
+  .b2{width:90px;height:90px;right:10%;top:60%;animation-delay:2s}
+  .b3{width:130px;height:130px;right:22%;top:12%;animation-delay:4s}
+  @keyframes melayang{50%{transform:translateY(-26px)}}
+
+  /* Form cepat */
+  .cepat{position:relative;z-index:5;margin:-70px auto 0;max-width:960px;background:var(--kartu);border-radius:var(--radius);box-shadow:var(--bayang);
+         padding:22px;display:grid;grid-template-columns:1.4fr 1fr .8fr auto;gap:14px;align-items:end;border:1px solid var(--garis)}
+  label{display:block;font-size:.78rem;font-weight:700;color:var(--redup);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em}
+  input,select,textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--garis);background:var(--bg);outline:none;transition:border .2s,box-shadow .2s}
+  input:focus,select:focus,textarea:focus{border-color:var(--utama);box-shadow:0 0 0 4px color-mix(in srgb,var(--utama) 18%,transparent)}
+
+  /* Statistik */
+  .stat{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
+  .stat div{padding:10px}
+  .stat strong{display:block;font-size:2.3rem;font-weight:800;background:linear-gradient(135deg,var(--utama),var(--utama2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat span{color:var(--redup);font-weight:500}
+
+  /* Filter + paket */
+  .tabs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
+  .tab{padding:10px 20px;border-radius:999px;border:1px solid var(--garis);background:var(--kartu);cursor:pointer;font-weight:600;color:var(--redup);transition:.2s}
+  .tab.aktif,.tab:hover{background:var(--utama);color:#fff;border-color:var(--utama)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:26px}
+  .kartu{background:var(--kartu);border-radius:var(--radius);overflow:hidden;box-shadow:var(--bayang);border:1px solid var(--garis);display:flex;flex-direction:column;transition:transform .3s}
+  .kartu:hover{transform:translateY(-8px)}
+  .foto{height:190px;position:relative;display:flex;align-items:center;justify-content:center;font-size:4rem;color:#fff}
+  .foto .tag{position:absolute;top:14px;left:14px;background:rgba(0,0,0,.35);backdrop-filter:blur(6px);font-size:.75rem;font-weight:700;padding:5px 12px;border-radius:999px}
+  .foto .rate{position:absolute;top:14px;right:14px;background:#fff;color:#14202e;font-size:.8rem;font-weight:800;padding:5px 10px;border-radius:999px}
+  .isi{padding:20px;display:flex;flex-direction:column;gap:10px;flex:1}
+  .isi h3{font-size:1.15rem}
+  .meta{color:var(--redup);font-size:.88rem}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chips span{font-size:.76rem;background:var(--bg2);border:1px solid var(--garis);padding:4px 10px;border-radius:999px;color:var(--redup)}
+  .bawah{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:10px}
+  .harga{font-size:1.35rem;font-weight:800;color:var(--utama)}
+  .harga small{display:block;font-size:.72rem;font-weight:500;color:var(--redup)}
+  .tombol2{display:flex;gap:8px}
+
+  /* Kenapa kami */
+  .fitur{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px}
+  .fitur div{background:var(--kartu);border:1px solid var(--garis);border-radius:var(--radius);padding:28px;box-shadow:var(--bayang)}
+  .fitur .ic{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:14px;background:linear-gradient(135deg,color-mix(in srgb,var(--utama) 16%,transparent),color-mix(in srgb,var(--utama2) 22%,transparent))}
+  .fitur h3{margin-bottom:6px}
+  .fitur p{color:var(--redup);font-size:.93rem}
+
+  /* Cara pesan */
+  .langkah{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;counter-reset:n}
+  .langkah div{position:relative;padding:26px 22px 22px;background:var(--kartu);border-radius:var(--radius);border:1px solid var(--garis);counter-increment:n}
+  .langkah div::before{content:counter(n);position:absolute;top:-18px;left:22px;width:38px;height:38px;border-radius:50%;background:var(--aksen);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(255,122,26,.4)}
+  .langkah p{color:var(--redup);font-size:.92rem}
+
+  /* Galeri */
+  .galeri{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:170px;gap:14px}
+  .gitem{border-radius:16px;cursor:pointer;display:flex;align-items:flex-end;padding:12px;color:#fff;font-weight:700;background-size:cover;background-position:center;transition:transform .3s,filter .3s;position:relative;overflow:hidden}
+  .gitem:hover{transform:scale(1.03);filter:brightness(1.08)}
+  .gitem.lebar{grid-column:span 2}
+  .gitem.tinggi{grid-row:span 2}
+  #lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
+  #lightbox.buka{display:flex}
+  #lightbox .isi-lb{width:min(900px,100%);aspect-ratio:16/10;border-radius:18px;display:flex;align-items:flex-end;padding:22px;color:#fff;font-size:1.3rem;font-weight:700;background-size:cover;background-position:center}
+  #lightbox button{position:absolute;top:20px;right:24px;background:#fff;border:0;width:44px;height:44px;border-radius:50%;font-size:1.3rem;cursor:pointer}
+
+  /* Testimoni */
+  .slider{max-width:760px;margin:0 auto;text-align:center}
+  .slide{display:none;background:var(--kartu);border:1px solid var(--garis);border-radius:var(--radius);padding:36px;box-shadow:var(--bayang)}
+  .slide.aktif{display:block;animation:muncul .5s}
+  @keyframes muncul{from{opacity:0;transform:translateY(12px)}}
+  .slide .bintang{color:#ffb400;letter-spacing:3px;margin-bottom:10px}
+  .slide p{font-size:1.1rem;margin-bottom:16px}
+  .slide b{color:var(--utama)}
+  .dots{display:flex;gap:8px;justify-content:center;margin-top:20px}
+  .dots i{width:10px;height:10px;border-radius:50%;background:var(--garis);cursor:pointer;transition:.2s}
+  .dots i.aktif{background:var(--aksen);width:28px;border-radius:999px}
+
+  /* FAQ */
+  .faq{max-width:760px;margin:0 auto;display:grid;gap:12px}
+  details{background:var(--kartu);border:1px solid var(--garis);border-radius:16px;padding:18px 22px}
+  summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:10px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";color:var(--aksen);font-size:1.4rem;line-height:1}
+  details[open] summary::after{content:"–"}
+  details p{margin-top:10px;color:var(--redup)}
+
+  /* Pemesanan */
+  .pesan{display:grid;grid-template-columns:1fr 1.1fr;gap:34px;align-items:start}
+  .pesan .kiri p{color:var(--redup);margin:12px 0 20px}
+  .kontak-list{display:grid;gap:12px}
+  .kontak-list div{display:flex;gap:12px;align-items:center;background:var(--kartu);border:1px solid var(--garis);padding:14px 16px;border-radius:14px}
+  .peta{margin-top:18px;border-radius:16px;min-height:190px;background:var(--bg2);border:1px dashed var(--garis);display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;color:var(--redup);font-size:.9rem}
+  form{background:var(--kartu);border:1px solid var(--garis);border-radius:var(--radius);padding:28px;box-shadow:var(--bayang);display:grid;gap:16px}
+  .baris{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .estimasi{background:linear-gradient(135deg,color-mix(in srgb,var(--utama) 12%,transparent),color-mix(in srgb,var(--utama2) 16%,transparent));padding:16px;border-radius:14px;display:flex;justify-content:space-between;align-items:center;font-weight:700}
+  .estimasi strong{font-size:1.4rem;color:var(--utama)}
+
+  /* Modal detail */
+  #modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:150;padding:16px}
+  #modal.buka{display:flex}
+  .kotak{background:var(--kartu);border-radius:var(--radius);width:min(620px,100%);max-height:90vh;overflow:auto;animation:muncul .3s}
+  .kotak .atas{height:150px;display:flex;align-items:center;justify-content:center;font-size:4rem;color:#fff;position:relative}
+  .kotak .isi-m{padding:24px}
+  .kotak h3{font-size:1.4rem;margin-bottom:4px}
+  .itin{margin:16px 0;display:grid;gap:10px}
+  .itin div{border-left:3px solid var(--aksen);padding-left:14px}
+  .itin b{display:block}
+  .itin span{color:var(--redup);font-size:.92rem}
+  .tutup{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;border:0;background:#fff;color:#14202e;font-size:1.1rem;cursor:pointer}
+
+  footer{background:#06203f;color:#b9cce0;padding:50px 0 24px}
+  .foot{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:30px;margin-bottom:30px}
+  footer h4{color:#fff;margin-bottom:10px}
+  footer a{display:block;margin-bottom:6px;opacity:.85}
+  footer a:hover{opacity:1;color:#ffc27a}
+  .copy{border-top:1px solid rgba(255,255,255,.12);padding-top:18px;text-align:center;font-size:.88rem}
+
+  .wa{position:fixed;right:18px;bottom:18px;z-index:80;background:#25d366;color:#fff;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;box-shadow:0 8px 22px rgba(0,0,0,.3);animation:denyut 2.4s infinite}
+  @keyframes denyut{0%{box-shadow:0 0 0 0 rgba(37,211,102,.6)}70%{box-shadow:0 0 0 18px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+  #naik{position:fixed;right:24px;bottom:90px;z-index:80;width:44px;height:44px;border-radius:50%;border:1px solid var(--garis);background:var(--kartu);cursor:pointer;display:none;box-shadow:var(--bayang)}
+
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s}
+  .reveal.tampil{opacity:1;transform:none}
+
+  @media(max-width:900px){
+    .cepat{grid-template-columns:1fr 1fr;margin:-60px 16px 0}
+    .stat{grid-template-columns:repeat(2,1fr)}
+    .galeri{grid-template-columns:repeat(2,1fr)}
+    .pesan,.foot{grid-template-columns:1fr}
+  }
+  @media(max-width:720px){
+    section{padding:64px 0}
+    .menu{position:absolute;top:68px;left:0;right:0;flex-direction:column;gap:0;background:var(--bg);border-bottom:1px solid var(--garis);display:none;padding:8px 20px}
+    .menu.buka{display:flex}
+    .menu li{padding:12px 0;border-bottom:1px solid var(--garis)}
+    #burger{display:inline-block}
+    .kanan .btn{display:none}
+    .hero{padding:90px 0 130px}
+    .cepat,.baris{grid-template-columns:1fr}
+  }
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header>
+  <nav class="wrap">
+    <a href="#" class="logo"><b>NamaTravel</b></a>
+    <ul class="menu" id="menu">
+      <li><a href="#paket">Paket</a></li>
+      <li><a href="#kenapa">Keunggulan</a></li>
+      <li><a href="#galeri">Galeri</a></li>
+      <li><a href="#testimoni">Testimoni</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#pesan">Kontak</a></li>
+    </ul>
+    <div class="kanan">
+      <button class="ikonbtn" id="tema" aria-label="Ganti tema">🌙</button>
+      <a class="btn kecil" href="#pesan">Pesan Sekarang</a>
+      <button class="ikonbtn" id="burger" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+  <div class="wrap">
+    <span class="label" style="color:#ffc27a">✈ Paket Wisata Terpercaya</span>
+    <h1>Jelajahi Dunia,<br><em>Tanpa Ribet</em></h1>
+    <p>Paket lengkap, harga transparan, pemandu ramah. Pilih tujuan, tentukan tanggal, kami urus sisanya.</p>
+    <div class="aksi">
+      <a class="btn" href="#paket">Lihat Paket Wisata</a>
+      <a class="btn garis" href="#pesan">Konsultasi Gratis</a>
+    </div>
+  </div>
+</div>
+
+<!-- FORM CEPAT -->
+<div class="wrap">
+  <div class="cepat" id="cepat">
+    <div><label for="qPaket">Pilih paket</label><select id="qPaket"></select></div>
+    <div><label for="qTgl">Tanggal berangkat</label><input type="date" id="qTgl"></div>
+    <div><label for="qOrang">Jumlah orang</label><input type="number" id="qOrang" min="1" value="2"></div>
+    <button class="btn" id="qCari" type="button">Cek Harga</button>
+  </div>
+</div>
+
+<!-- STATISTIK -->
+<section style="padding-bottom:40px">
+  <div class="wrap stat reveal">
+    <div><strong data-target="2500" data-plus="+">0</strong><span>Wisatawan Puas</span></div>
+    <div><strong data-target="40" data-plus="+">0</strong><span>Destinasi</span></div>
+    <div><strong data-target="8" data-plus=" th">0</strong><span>Pengalaman</span></div>
+    <div><strong data-target="98" data-plus="%">0</strong><span>Rating Positif</span></div>
+  </div>
+</section>
+
+<!-- PAKET -->
+<section id="paket" class="alt">
+  <div class="wrap">
+    <div class="head reveal"><span class="label">Paket Wisata</span><h2>Pilih Liburan yang Cocok untukmu</h2><p>Semua paket sudah termasuk transport, penginapan, dan pemandu. Klik detail untuk lihat rencana perjalanan.</p></div>
+    <div class="tabs reveal" id="tabs"></div>
+    <div class="grid" id="daftarPaket"></div>
+  </div>
+</section>
+
+<!-- KEUNGGULAN -->
+<section id="kenapa">
+  <div class="wrap">
+    <div class="head reveal"><span class="label">Kenapa Kami</span><h2>Perjalanan Nyaman, Hati Tenang</h2></div>
+    <div class="fitur">
+      <div class="reveal"><div class="ic">💰</div><h3>Harga Transparan</h3><p>Semua biaya jelas di awal. Tidak ada biaya tersembunyi.</p></div>
+      <div class="reveal"><div class="ic">🧭</div><h3>Pemandu Berpengalaman</h3><p>Pemandu lokal yang paham lokasi dan ramah pada keluarga.</p></div>
+      <div class="reveal"><div class="ic">🗓️</div><h3>Jadwal Fleksibel</h3><p>Tanggal dan rute bisa disesuaikan dengan rombonganmu.</p></div>
+      <div class="reveal"><div class="ic">🛡️</div><h3>Aman &amp; Terpercaya</h3><p>Armada terawat, mitra hotel terverifikasi, dan asuransi perjalanan.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CARA PESAN -->
+<section class="alt">
+  <div class="wrap">
+    <div class="head reveal"><span class="label">Cara Pesan</span><h2>Booking Semudah 4 Langkah</h2></div>
+    <div class="langkah">
+      <div class="reveal"><h3>Pilih Paket</h3><p>Lihat daftar paket dan pilih yang sesuai budgetmu.</p></div>
+      <div class="reveal"><h3>Isi Form</h3><p>Isi tanggal dan jumlah peserta di form pemesanan.</p></div>
+      <div class="reveal"><h3>Konfirmasi WhatsApp</h3><p>Pesananmu otomatis terkirim ke WhatsApp admin kami.</p></div>
+      <div class="reveal"><h3>Berangkat!</h3><p>Lakukan pembayaran DP, lalu tinggal siapkan koper.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERI -->
+<section id="galeri">
+  <div class="wrap">
+    <div class="head reveal"><span class="label">Galeri</span><h2>Momen Seru Para Pelanggan</h2><p>Klik foto untuk memperbesar.</p></div>
+    <div class="galeri" id="galeriGrid"></div>
+  </div>
+</section>
+<div id="lightbox"><button id="lbTutup" aria-label="Tutup">✕</button><div class="isi-lb" id="lbIsi"></div></div>
+
+<!-- TESTIMONI -->
+<section id="testimoni" class="alt">
+  <div class="wrap">
+    <div class="head reveal"><span class="label">Testimoni</span><h2>Kata Mereka yang Sudah Berangkat</h2></div>
+    <div class="slider reveal" id="slider"></div>
+    <div class="dots" id="dots"></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="head reveal"><span class="label">FAQ</span><h2>Pertanyaan yang Sering Diajukan</h2></div>
+    <div class="faq reveal">
+      <details><summary>Berapa DP yang harus dibayar?</summary><p>Cukup DP 30% untuk mengunci jadwal. Pelunasan paling lambat H-3 sebelum keberangkatan.</p></details>
+      <details><summary>Apakah bisa reschedule?</summary><p>Bisa, maksimal 1 kali jika diinformasikan minimal H-7 sebelum keberangkatan.</p></details>
+      <details><summary>Apakah harga sudah termasuk tiket masuk wisata?</summary><p>Ya, tiket masuk sesuai itinerary sudah termasuk dalam harga paket.</p></details>
+      <details><summary>Bisa request paket khusus?</summary><p>Tentu. Hubungi kami lewat WhatsApp, kami buatkan paket sesuai budget dan jumlah peserta.</p></details>
+      <details><summary>Metode pembayaran apa saja?</summary><p>Transfer bank dan e-wallet. Detail rekening dikirim setelah booking dikonfirmasi.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- PEMESANAN -->
+<section id="pesan" class="alt">
+  <div class="wrap pesan">
+    <div class="kiri reveal">
+      <span class="label">Pemesanan</span>
+      <h2>Siap Berangkat? Pesan Sekarang</h2>
+      <p>Isi form di samping, pesananmu langsung terkirim ke WhatsApp kami. Tim kami akan balas secepatnya.</p>
+      <div class="kontak-list">
+        <div>📍 <span>Jl. Contoh No. 123, Kota Anda</span></div>
+        <div>📞 <span>0812-3456-7890</span></div>
+        <div>✉️ <span>info@namatravel.com</span></div>
+        <div>🕘 <span>Senin-Sabtu, 08.00-17.00</span></div>
+      </div>
+      <div class="peta">Tempel kode embed Google Maps (&lt;iframe&gt;) di sini</div>
+    </div>
+    <form id="form" class="reveal">
+      <div><label for="fNama">Nama lengkap</label><input id="fNama" required placeholder="Contoh: Budi Santoso"></div>
+      <div><label for="fPaket">Paket wisata</label><select id="fPaket"></select></div>
+      <div class="baris">
+        <div><label for="fTgl">Tanggal berangkat</label><input type="date" id="fTgl" required></div>
+        <div><label for="fOrang">Jumlah orang</label><input type="number" id="fOrang" min="1" value="2" required></div>
+      </div>
+      <div><label for="fCatatan">Catatan (opsional)</label><textarea id="fCatatan" rows="3" placeholder="Permintaan khusus, lokasi jemput, dll."></textarea></div>
+      <div class="estimasi"><span>Estimasi total</span><strong id="total">Rp 0</strong></div>
+      <button class="btn" type="submit" style="justify-content:center">Kirim Pesanan via WhatsApp 💬</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div><h4>NamaTravel</h4><p>Partner liburan terpercaya untuk keluarga, teman, dan pasangan. Nikmati perjalanan tanpa ribet.</p></div>
+      <div><h4>Menu</h4><a href="#paket">Paket Wisata</a><a href="#galeri">Galeri</a><a href="#faq">FAQ</a><a href="#pesan">Kontak</a></div>
+      <div><h4>Ikuti Kami</h4><a href="#">Instagram</a><a href="#">TikTok</a><a href="#">Facebook</a></div>
+    </div>
+    <div class="copy">&copy; 2026 NamaTravel. Semua hak dilindungi.</div>
+  </div>
+</footer>
+
+<div id="modal"><div class="kotak" id="modalIsi"></div></div>
+<a class="wa" id="waFloat" href="#" target="_blank" aria-label="WhatsApp">💬</a>
+<button id="naik" aria-label="Ke atas">↑</button>
+
+<script>
+/* ============ PENGATURAN (EDIT DI SINI) ============ */
+const CONFIG = {
+  nama: "NamaTravel",
+  wa: "6281234567890"          // format: 62 + nomor tanpa 0 di depan
+};
+
+const PAKET = [
+  {id:1, nama:"Pantai Eksotis 3H2M", kategori:"Pantai", hari:3, harga:1850000, ikon:"🏖️", rating:4.9,
+   grad:"linear-gradient(135deg,#1c92d2,#0b5ea8)",
+   fasilitas:["Hotel + sarapan","Transport","Pemandu","Tiket wisata"],
+   itinerari:[["Hari 1","Jemput di bandara/hotel, check-in, sunset di pantai."],["Hari 2","Island hopping, snorkeling, makan siang seafood."],["Hari 3","Belanja oleh-oleh dan antar pulang."]]},
+  {id:2, nama:"Petualangan Alam 2H1M", kategori:"Alam", hari:2, harga:1250000, ikon:"⛰️", rating:4.8,
+   grad:"linear-gradient(135deg,#43c6ac,#0b8a7a)",
+   fasilitas:["Penginapan","Trekking","Makan 3x","Foto dokumentasi"],
+   itinerari:[["Hari 1","Perjalanan ke lokasi, trekking ringan, air terjun, api unggun."],["Hari 2","Sunrise view, sarapan, kembali ke kota."]]},
+  {id:3, nama:"Wisata Budaya 3H2M", kategori:"Budaya", hari:3, harga:1650000, ikon:"🏛️", rating:4.7,
+   grad:"linear-gradient(135deg,#8e44ad,#5b2c83)",
+   fasilitas:["Hotel","Transport","Pemandu lokal","Tiket museum"],
+   itinerari:[["Hari 1","City tour, museum, dan kuliner khas daerah."],["Hari 2","Kampung adat, workshop kerajinan, pertunjukan seni."],["Hari 3","Pasar tradisional dan pulang."]]},
+  {id:4, nama:"Liburan Keluarga 4H3M", kategori:"Keluarga", hari:4, harga:3200000, ikon:"👨‍👩‍👧", rating:4.9,
+   grad:"linear-gradient(135deg,#ff8a1f,#d9480f)",
+   fasilitas:["Hotel keluarga","Mobil + sopir","Wisata anak","Jadwal fleksibel"],
+   itinerari:[["Hari 1","Check-in dan santai di hotel."],["Hari 2","Taman wisata dan aktivitas anak."],["Hari 3","Pantai/alam sesuai pilihan keluarga."],["Hari 4","Belanja dan pulang."]]},
+  {id:5, nama:"Honeymoon Romantis 3H2M", kategori:"Pantai", hari:3, harga:2900000, ikon:"💞", rating:5.0,
+   grad:"linear-gradient(135deg,#ee5a8f,#b83280)",
+   fasilitas:["Villa privat","Candle light dinner","Transport","Foto couple"],
+   itinerari:[["Hari 1","Check-in villa, welcome drink, sunset."],["Hari 2","Tur pulau privat dan candle light dinner."],["Hari 3","Sarapan romantis dan antar pulang."]]},
+  {id:6, nama:"Weekend Gunung 2H1M", kategori:"Alam", hari:2, harga:990000, ikon:"🏕️", rating:4.6,
+   grad:"linear-gradient(135deg,#56ab2f,#2f7d1b)",
+   fasilitas:["Camping ground","Tenda","Makan 3x","Pemandu"],
+   itinerari:[["Hari 1","Mendaki, pasang tenda, barbeque malam."],["Hari 2","Sunrise, turun gunung, kembali."]]}
+];
+
+const GALERI = [
+  {t:"Pantai Indah", g:"linear-gradient(135deg,#2193b0,#6dd5ed)", c:"lebar"},
+  {t:"Air Terjun",   g:"linear-gradient(135deg,#56ab2f,#a8e063)", c:"tinggi"},
+  {t:"Sunset",       g:"linear-gradient(135deg,#f7971e,#ff5e62)"},
+  {t:"Kampung Adat", g:"linear-gradient(135deg,#8e44ad,#c0392b)"},
+  {t:"Perbukitan",   g:"linear-gradient(135deg,#134e5e,#71b280)", c:"lebar"},
+  {t:"Snorkeling",   g:"linear-gradient(135deg,#00c6ff,#0072ff)"},
+  {t:"Camping",      g:"linear-gradient(135deg,#141e30,#35577d)"}
+  /* Pakai foto sendiri: tambah img:"foto/pantai.jpg" pada item */
+];
+
+const TESTI = [
+  {n:"Contoh Nama 1", k:"Keluarga dari Kota A", t:"Perjalanannya rapi, pemandunya sabar, anak-anak senang sekali. Pasti pesan lagi!"},
+  {n:"Contoh Nama 2", k:"Rombongan kantor", t:"Harga sesuai dan tidak ada biaya tambahan. Itinerary jelas dari awal."},
+  {n:"Contoh Nama 3", k:"Pasangan honeymoon", t:"Proses pesan lewat WhatsApp gampang dan cepat dibalas. Villa-nya cantik banget."}
+];
+
+/* ============ UTILITAS ============ */
+const $ = s => document.querySelector(s);
+const rp = n => "Rp " + new Intl.NumberFormat("id-ID").format(n);
+const waLink = teks => `https://wa.me/${CONFIG.wa}?text=${encodeURIComponent(teks)}`;
+$("#waFloat").href = waLink(`Halo ${CONFIG.nama}, saya ingin tanya paket wisata.`);
+
+/* ============ TEMA GELAP ============ */
+const root = document.documentElement;
+try{ const s = localStorage.getItem("tema"); if(s) root.dataset.theme = s; }catch(e){}
+const setIkon = () => $("#tema").textContent = root.dataset.theme === "dark" ? "☀️" : "🌙";
+setIkon();
+$("#tema").onclick = () => {
+  root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+  try{ localStorage.setItem("tema", root.dataset.theme); }catch(e){}
+  setIkon();
+};
+
+/* ============ MENU MOBILE ============ */
+$("#burger").onclick = () => $("#menu").classList.toggle("buka");
+document.querySelectorAll("#menu a").forEach(a => a.onclick = () => $("#menu").classList.remove("buka"));
+
+/* ============ PAKET + FILTER ============ */
+const kategori = ["Semua", ...new Set(PAKET.map(p => p.kategori))];
+let aktifKat = "Semua";
+function renderTabs(){
+  $("#tabs").innerHTML = kategori.map(k => `<button class="tab ${k===aktifKat?"aktif":""}" data-k="${k}">${k}</button>`).join("");
+  document.querySelectorAll(".tab").forEach(b => b.onclick = () => { aktifKat = b.dataset.k; renderTabs(); renderPaket(); });
+}
+function renderPaket(){
+  const list = PAKET.filter(p => aktifKat==="Semua" || p.kategori===aktifKat);
+  $("#daftarPaket").innerHTML = list.map(p => `
+    <article class="kartu reveal tampil">
+      <div class="foto" style="background:${p.grad}">${p.ikon}
+        <span class="tag">${p.kategori}</span><span class="rate">★ ${p.rating.toFixed(1)}</span></div>
+      <div class="isi">
+        <h3>${p.nama}</h3>
+        <div class="meta">⏱ ${p.hari} hari</div>
+        <div class="chips">${p.fasilitas.map(f=>`<span>${f}</span>`).join("")}</div>
+        <div class="bawah">
+          <div class="harga">${rp(p.harga)}<small>per orang</small></div>
+          <div class="tombol2">
+            <button class="btn kecil sekunder" onclick="bukaModal(${p.id})">Detail</button>
+            <button class="btn kecil" onclick="pilihPaket(${p.id})">Pesan</button>
+          </div>
+        </div>
+      </div>
+    </article>`).join("");
+}
+function isiSelect(sel){ sel.innerHTML = PAKET.map(p => `<option value="${p.id}">${p.nama} - ${rp(p.harga)}</option>`).join(""); }
+isiSelect($("#qPaket")); isiSelect($("#fPaket"));
+renderTabs(); renderPaket();
+
+/* ============ MODAL DETAIL ============ */
+window.bukaModal = id => {
+  const p = PAKET.find(x => x.id === id);
+  $("#modalIsi").innerHTML = `
+    <div class="atas" style="background:${p.grad}">${p.ikon}<button class="tutup" onclick="tutupModal()">✕</button></div>
+    <div class="isi-m">
+      <h3>${p.nama}</h3>
+      <div class="meta">${p.kategori} • ${p.hari} hari • ★ ${p.rating.toFixed(1)}</div>
+      <div class="itin">${p.itinerari.map(i=>`<div><b>${i[0]}</b><span>${i[1]}</span></div>`).join("")}</div>
+      <div class="chips" style="margin-bottom:18px">${p.fasilitas.map(f=>`<span>✓ ${f}</span>`).join("")}</div>
+      <div class="bawah"><div class="harga">${rp(p.harga)}<small>per orang</small></div>
+      <button class="btn" onclick="tutupModal();pilihPaket(${p.id})">Pesan Paket Ini</button></div>
+    </div>`;
+  $("#modal").classList.add("buka");
+};
+window.tutupModal = () => $("#modal").classList.remove("buka");
+$("#modal").onclick = e => { if(e.target.id === "modal") tutupModal(); };
+
+window.pilihPaket = id => {
+  $("#fPaket").value = id; hitung();
+  $("#pesan").scrollIntoView({behavior:"smooth"});
+};
+
+/* ============ FORM CEPAT + ESTIMASI ============ */
+const hariIni = new Date().toISOString().split("T")[0];
+["#qTgl","#fTgl"].forEach(s => $(s).min = hariIni);
+function hitung(){
+  const p = PAKET.find(x => x.id == $("#fPaket").value);
+  const n = Math.max(1, parseInt($("#fOrang").value) || 1);
+  $("#total").textContent = rp(p.harga * n);
+}
+["#fPaket","#fOrang"].forEach(s => $(s).addEventListener("input", hitung));
+hitung();
+$("#qCari").onclick = () => {
+  $("#fPaket").value = $("#qPaket").value;
+  $("#fTgl").value = $("#qTgl").value;
+  $("#fOrang").value = $("#qOrang").value || 1;
+  hitung();
+  $("#pesan").scrollIntoView({behavior:"smooth"});
+};
+$("#form").onsubmit = e => {
+  e.preventDefault();
+  const p = PAKET.find(x => x.id == $("#fPaket").value);
+  const n = parseInt($("#fOrang").value) || 1;
+  const pesan =
+`Halo ${CONFIG.nama}, saya ingin memesan:
+Nama: ${$("#fNama").value}
+Paket: ${p.nama}
+Tanggal berangkat: ${$("#fTgl").value}
+Jumlah orang: ${n}
+Estimasi total: ${rp(p.harga*n)}
+Catatan: ${$("#fCatatan").value || "-"}`;
+  window.open(waLink(pesan), "_blank");
+};
+
+/* ============ GALERI + LIGHTBOX ============ */
+$("#galeriGrid").innerHTML = GALERI.map((g,i) => `
+  <div class="gitem ${g.c||""} reveal" data-i="${i}" style="background-image:${g.img?`url(${g.img})`:"none"};background:${g.img?"":g.g}">${g.t}</div>`).join("");
+document.querySelectorAll(".gitem").forEach(el => el.onclick = () => {
+  const g = GALERI[el.dataset.i];
+  const box = $("#lbIsi");
+  box.textContent = g.t;
+  box.style.background = g.img ? `url(${g.img}) center/cover` : g.g;
+  $("#lightbox").classList.add("buka");
+});
+$("#lbTutup").onclick = () => $("#lightbox").classList.remove("buka");
+$("#lightbox").onclick = e => { if(e.target.id === "lightbox") $("#lightbox").classList.remove("buka"); };
+document.addEventListener("keydown", e => { if(e.key === "Escape"){ tutupModal(); $("#lightbox").classList.remove("buka"); } });
+
+/* ============ SLIDER TESTIMONI ============ */
+$("#slider").innerHTML = TESTI.map(t => `
+  <div class="slide"><div class="bintang">★★★★★</div><p>"${t.t}"</p><b>${t.n}</b><div class="meta">${t.k}</div></div>`).join("");
+$("#dots").innerHTML = TESTI.map(() => "<i></i>").join("");
+const slides = document.querySelectorAll(".slide"), dots = document.querySelectorAll("#dots i");
+let idx = 0, timer;
+function tampil(i){
+  idx = (i + slides.length) % slides.length;
+  slides.forEach((s,k) => s.classList.toggle("aktif", k===idx));
+  dots.forEach((d,k) => d.classList.toggle("aktif", k===idx));
+}
+dots.forEach((d,k) => d.onclick = () => { tampil(k); mulaiOtomatis(); });
+function mulaiOtomatis(){ clearInterval(timer); timer = setInterval(() => tampil(idx+1), 5000); }
+tampil(0); mulaiOtomatis();
+
+/* ============ ANIMASI SCROLL ============ */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting){ e.target.classList.add("tampil"); io.unobserve(e.target); }
+}), {threshold:.12});
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+const ioStat = new IntersectionObserver(es => es.forEach(e => {
+  if(!e.isIntersecting) return;
+  e.target.querySelectorAll("strong").forEach(el => {
+    const target = +el.dataset.target, plus = el.dataset.plus || "";
+    let n = 0; const step = Math.max(1, Math.ceil(target/60));
+    const t = setInterval(() => { n = Math.min(target, n+step); el.textContent = new Intl.NumberFormat("id-ID").format(n) + plus; if(n>=target) clearInterval(t); }, 25);
+  });
+  ioStat.unobserve(e.target);
+}), {threshold:.4});
+ioStat.observe($(".stat"));
+
+/* ============ SCROLL: progress, tombol naik, menu aktif ============ */
+const links = [...document.querySelectorAll("#menu a")];
+const secs = links.map(a => document.querySelector(a.getAttribute("href")));
+addEventListener("scroll", () => {
+  const h = document.documentElement;
+  $("#progress").style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + "%";
+  $("#naik").style.display = h.scrollTop > 500 ? "block" : "none";
+  let cur = -1; secs.forEach((s,i) => { if(s && s.getBoundingClientRect().top < 140) cur = i; });
+  links.forEach((a,i) => a.classList.toggle("aktif", i===cur));
+});
+$("#naik").onclick = () => scrollTo({top:0, behavior:"smooth"});
+</script>
+<div style="position:fixed;left:14px;bottom:14px;z-index:70;background:#14202e;color:#fff;padding:8px 14px;border-radius:999px;font-size:.8rem;font-weight:700;opacity:.9">DEMO TEMPLATE</div>
+</body>
+</html>
